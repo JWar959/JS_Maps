@@ -1,6 +1,9 @@
 // The 'map' parameter is refering to the #map element. 
 // We are initializing the map to near Ramapo College - but you can  
 // initialize it to anywhere. 
+
+let markers = [];
+
 const map = L.map('map').setView([41, -74], 13); 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { 
    maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' 
@@ -26,6 +29,11 @@ const loadPlaces = async () => {
     }
 
     if (response && response.data && response.data.places) {
+        for (const marker of markers) {
+            map.removeLayer(marker);
+        }
+        markers.length = 0;
+        
         for (const place of response.data.places) {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -36,6 +44,14 @@ const loadPlaces = async () => {
                 </td>
             `;
             tbody.appendChild(tr);
+
+            console.log("Place:", place);
+            if (place.lat && place.lng) {
+                const marker = L.marker([place.lat, place.lng])
+                    .addTo(map)
+                    .bindPopup(`<b>${place.label}</b><br/>${place.address}`);
+                markers.push(marker); // store marker for later removal
+            }           
         }
     }
 }

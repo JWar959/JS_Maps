@@ -22,10 +22,12 @@ class PlacesDB {
         return places;
     }
 
-    async createPlace(label, address) {
+    async createPlace(label, address, lat, lng) {
         const id = await this.db.create('Place', [
             { column: 'label', value: label },
-            { column: 'address', value: address }
+            { column: 'address', value: address },
+            { column: 'lat', value: lat},
+            { column: 'lng', value: lng}
         ]);
         return id;
     }
