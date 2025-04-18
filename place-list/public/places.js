@@ -47,6 +47,10 @@ const loadPlaces = async () => {
                 const lng = row.dataset.lng;
 
                 map.flyTo(new L.LatLng(lat, lng));
+                // Try to get the markers to pop up
+                const marker = markers.find(m => m.placeId == row.dataset.id);
+                if (marker) marker.openPopup();
+
             }
         }
 
@@ -63,6 +67,8 @@ const loadPlaces = async () => {
             tr.dataset.lat = place.lat; 
             tr.dataset.lng = place.lng;
             tr.onclick = on_row_click;
+            tr.dataset.id = place.id;
+
             tbody.appendChild(tr);
 
             console.log("Place:", place);
@@ -70,6 +76,7 @@ const loadPlaces = async () => {
                 const marker = L.marker([place.lat, place.lng])
                     .addTo(map)
                     .bindPopup(`<b>${place.label}</b><br/>${place.address}`);
+                marker.placeId = place.id;    
                 markers.push(marker); // store marker for later removal
             }           
         }
