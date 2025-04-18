@@ -1,3 +1,11 @@
+// The 'map' parameter is refering to the #map element. 
+// We are initializing the map to near Ramapo College - but you can  
+// initialize it to anywhere. 
+const map = L.map('map').setView([41, -74], 13); 
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+   maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' 
+}).addTo(map);
+
 const addPlace = async () => {
     const label = document.querySelector("#label").value;
     const address = document.querySelector("#address").value;
