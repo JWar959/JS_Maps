@@ -29,11 +29,27 @@ const loadPlaces = async () => {
     }
 
     if (response && response.data && response.data.places) {
-        for (const marker of markers) {
-            map.removeLayer(marker);
-        }
+        for (let i = 0; i < markers.length; i++) { 
+            map.removeLayer(markers[i]); 
+         }
         markers.length = 0;
         
+        // Define the function for on_row_click
+        const on_row_click = (e) => { 
+            console.log(e.target)  
+            console.log(e.target.tagName)
+            
+            let row = e.target; 
+            if (e.target.tagName.toUpperCase() === 'TD') { 
+                row = e.target.parentNode;
+                
+                const lat = row.dataset.lat; 
+                const lng = row.dataset.lng;
+
+                map.flyTo(new L.LatLng(lat, lng));
+            }
+        }
+
         for (const place of response.data.places) {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -43,6 +59,10 @@ const loadPlaces = async () => {
                     <button class='btn btn-danger' onclick='deletePlace(${place.id})'>Delete</button>
                 </td>
             `;
+
+            tr.dataset.lat = place.lat; 
+            tr.dataset.lng = place.lng;
+            tr.onclick = on_row_click;
             tbody.appendChild(tr);
 
             console.log("Place:", place);
