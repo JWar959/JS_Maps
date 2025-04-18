@@ -11,7 +11,9 @@ class PlacesDB {
         await this.db.schema('Place', [
             { name: 'id', type: 'INTEGER' },
             { name: 'label', type: 'TEXT' },
-            { name: 'address', type: 'TEXT' }
+            { name: 'address', type: 'TEXT' },
+            { name: 'lat', type: 'NUMERIC'},
+            { name: 'lng', type: 'NUMERIC'},
         ], 'id');
     }
 
