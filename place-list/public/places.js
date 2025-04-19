@@ -2,9 +2,16 @@
 // We are initializing the map to near Ramapo College - but you can  
 // initialize it to anywhere. 
 
+/*
+John Warren
+CMPS 369 Web Application Development
+Project 4 - Maps with JavaScript
+Spring 2025
+*/
+
 let markers = [];
 
-const map = L.map('map').setView([41, -74], 13); 
+const map = L.map('map').setView([35, -106], 13); 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { 
    maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' 
 }).addTo(map);

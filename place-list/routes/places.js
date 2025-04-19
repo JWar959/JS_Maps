@@ -1,3 +1,10 @@
+/*
+John Warren
+CMPS 369 Web Application Development
+Project 4 - Maps with JavaScript
+Spring 2025
+*/
+
 const express = require('express');
 const router = express.Router();
 const geo = require('node-geocoder');
@@ -14,10 +21,12 @@ router.get('/', async (req, res) => {
 });
 
 router.put('/', async (req, res) => {
+
+    // By setting lat and lng to 0 first, if our search doesn't
+    // return a match, it's lat and lng values will still be correct
     let lat = 0;
     let lng = 0;
     let address = req.body.address;
-
 
     const result = await geocoder.geocode(address); 
     if (result.length > 0) { 
@@ -27,7 +36,6 @@ router.put('/', async (req, res) => {
     }
     const id = await req.db.createPlace(req.body.label, address, lat, lng); 
     res.json({ id: id, label: req.body.label, address: address, lat: lat, lng: lng });
-
 
 });
 

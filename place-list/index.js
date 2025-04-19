@@ -1,3 +1,10 @@
+/*
+John Warren
+CMPS 369 Web Application Development
+Project 4 - Maps with JavaScript
+Spring 2025
+*/
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -14,7 +21,6 @@ app.use((req, res, next) => {
     req.db = db;
     next();
 });
-
 
 app.use('/places', require('./routes/places'));
 app.use('/', (req, res) => {
