@@ -18,8 +18,11 @@ const addPlace = async () => {
 
     labelField.style.color = "transparent";
     addressField.style.color = "transparent";
+   
+    // capture the values here so we can fly to the spot
+    const response = await axios.put('/places', { label: label, address: address });
+    const { lat, lng, id } = response.data;
 
-    await axios.put('/places', { label: label, address: address });
     await loadPlaces();
 
     // setting a timeout here to deal with timing issues preventing
@@ -29,7 +32,12 @@ const addPlace = async () => {
         labelField.value = '';
         addressField.value = '';
         labelField.style.color = '';
-    }, 10);
+
+        map.flyTo(new L.LatLng(lat, lng));
+        // Try to get the markers to pop up
+        const marker = markers.find(m => m.placeId == id);
+        if (marker) marker.openPopup();
+    }, 50); 
 }
 
 const deletePlace = async (id) => {
