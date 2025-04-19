@@ -21,12 +21,9 @@ router.put('/', async (req, res) => {
 
     const result = await geocoder.geocode(address); 
     if (result.length > 0) { 
-      console.log(`The location of your address is ${result[0].latitude}/${result[0].longitude}`);
       lat = result[0].latitude;
       lng = result[0].longitude;
       address = result[0].formattedAddress;
-      //address = `${result[0].streetNumber}, ${result[0].streetName}, ${result[0].city}, ${result[0].zipcode}, ${result[0].country}`;
-      console.log(`The updated location of your address is: ${address}`); 
     }
     const id = await req.db.createPlace(req.body.label, address, lat, lng); 
     res.json({ id: id, label: req.body.label, address: address, lat: lat, lng: lng });

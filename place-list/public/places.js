@@ -43,6 +43,8 @@ const on_row_click = (e) => {
     console.log(e.target.tagName)
     
     let row = e.target; 
+    
+
     if (e.target.tagName.toUpperCase() === 'TD') { 
         row = e.target.parentNode;
         
@@ -82,12 +84,16 @@ const loadPlaces = async () => {
 
             tr.dataset.lat = place.lat; 
             tr.dataset.lng = place.lng;
-            tr.onclick = on_row_click;
+            // Only enable this feature if it's a real value
+            if( ( place.lat !== 0 ) || ( place.lng !== 0 ) ){
+                tr.onclick = on_row_click;
+            }
             tr.dataset.id = place.id;
 
             tbody.appendChild(tr);
 
-            if (place.lat && place.lng) {
+            // Going to try and avoid marking locations that aren't 'real'
+            if ( (place.lat !== 0 ) && ( place.lng !== 0 ) ) {
                 const marker = L.marker([place.lat, place.lng])
                     .addTo(map)
                     .bindPopup(`<b>${place.label}</b><br/>${place.address}`);
