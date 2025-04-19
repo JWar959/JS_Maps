@@ -10,15 +10,51 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 const addPlace = async () => {
-    const label = document.querySelector("#label").value;
-    const address = document.querySelector("#address").value;
+    const labelField = document.querySelector("#label");
+    const addressField = document.querySelector("#address");
+
+    const label = labelField.value;
+    const address = addressField.value;
+
+    labelField.style.color = "transparent";
+    addressField.style.color = "transparent";
+
     await axios.put('/places', { label: label, address: address });
     await loadPlaces();
+
+    // setting a timeout here to deal with timing issues preventing
+    // this from being drawn correctly
+    setTimeout(() => {
+        addressField.style.color = '';
+        labelField.value = '';
+        addressField.value = '';
+        labelField.style.color = '';
+    }, 10);
 }
 
 const deletePlace = async (id) => {
     await axios.delete(`/places/${id}`);
     await loadPlaces();
+}
+
+// Define the function for on_row_click
+const on_row_click = (e) => { 
+    console.log(e.target)  
+    console.log(e.target.tagName)
+    
+    let row = e.target; 
+    if (e.target.tagName.toUpperCase() === 'TD') { 
+        row = e.target.parentNode;
+        
+        const lat = row.dataset.lat; 
+        const lng = row.dataset.lng;
+
+        map.flyTo(new L.LatLng(lat, lng));
+        // Try to get the markers to pop up
+        const marker = markers.find(m => m.placeId == row.dataset.id);
+        if (marker) marker.openPopup();
+
+    }
 }
 
 const loadPlaces = async () => {
@@ -33,26 +69,6 @@ const loadPlaces = async () => {
             map.removeLayer(markers[i]); 
          }
         markers.length = 0;
-        
-        // Define the function for on_row_click
-        const on_row_click = (e) => { 
-            console.log(e.target)  
-            console.log(e.target.tagName)
-            
-            let row = e.target; 
-            if (e.target.tagName.toUpperCase() === 'TD') { 
-                row = e.target.parentNode;
-                
-                const lat = row.dataset.lat; 
-                const lng = row.dataset.lng;
-
-                map.flyTo(new L.LatLng(lat, lng));
-                // Try to get the markers to pop up
-                const marker = markers.find(m => m.placeId == row.dataset.id);
-                if (marker) marker.openPopup();
-
-            }
-        }
 
         for (const place of response.data.places) {
             const tr = document.createElement('tr');
@@ -71,7 +87,6 @@ const loadPlaces = async () => {
 
             tbody.appendChild(tr);
 
-            console.log("Place:", place);
             if (place.lat && place.lng) {
                 const marker = L.marker([place.lat, place.lng])
                     .addTo(map)
